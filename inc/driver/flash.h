@@ -1,6 +1,6 @@
 /**
  * @file flash.h
- * @brief FLASH configuration and acceleration control for STM32 microcontrollers.
+ * @brief Header only flash configuration
  *
  *
  * Usage:
@@ -8,14 +8,13 @@
  *  - Call `flash_acceleration_setup()` early during system initialization,
  *    typically immediately after configuring system clocks.
  * Example:
- *  // Configure FLASH for high-speed operation:
- *  // 5 wait states + I-Cache + D-Cache enabled
+
  *  flash_acceleration_setup(FLASH_LATENCY_3ws,
  *                           FLASH_DCACHE_ENABLE,
  *                           FLASH_ICACHE_ENABLE);
  *
  * Notes:
- *  - Designed for STM32F4 series devices that use ACR-based flash acceleration.
+ *  - Designed for STM32F411CE.
  *  - This writes directly to the FLASH->ACR register, replacing its previous state.
  *    Ensure that all required bits are included in the parameters.
  */
