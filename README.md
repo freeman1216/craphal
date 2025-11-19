@@ -17,7 +17,7 @@ BAD is a collection of simple, mostly header-only (stb style) drivers for STM32F
 - SYSCFG (`driver/syscfg.h`) - Syscfg, for now only for exti
 - Flash (`driver/flash.h`) - setup latency, caches, and prefetch.
 - RCC  (`driver/rcc.h`) - clock configuration 
-- Handlers (`driver/handlers.c`) - for now only implements a hardfault that reports the registers state at fault
+- Handlers (`handlers.c`) - for now only implements a hardfault that reports the registers state at fault
 - Startup (`startup_stm32f411ceu6.c`) - startup file, plain and simple
 - Simple linker script (`stm32f411ceu6.ld`)
 
