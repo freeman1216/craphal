@@ -13,7 +13,7 @@
 #define WEAK_USER_ISR(x,...) void x(__VA_ARGS__) __attribute__((weak, alias(#x"_default")))
 #define DEFAULT_USER_ISR(x,...) void x##_default(__VA_ARGS__)
 #define WEAK_PERIPH_USER_ISR(x,default_isr,...) void x(__VA_ARGS__) __attribute__((weak, alias(#default_isr"_default")))
-
+#define ATTR_RAMFUNC __attribute__((section(".ramfunc")))
 #define ALWAYS_INLINE static inline
 
 #define __ENABLE_INTERUPTS __asm volatile ("cpsie i")

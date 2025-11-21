@@ -12,10 +12,15 @@ SOURCES = $(SRC_DIR)/startup_stm32f411ceu6.c \
 MAIN_SRC = $(SOURCES) $(SRC_DIR)/main.c
 EXTI_SRC = $(SOURCES) tests/exti.c
 TIMER_SRC = $(SOURCES) tests/timer.c
+RAMFUNC_SRC = $(SOURCES) tests/ramfunc.c
+IVTRELOC_SRC = $(SOURCES) tests/ivt_reloc.c
 
 MAIN_BIN = $(BUILD_DIR)/main.elf
 EXTI_BIN = $(BUILD_DIR)/exti.elf
 TIMER_BIN = $(BUILD_DIR)/timer.elf
+RAMFUNC_BIN = $(BUILD_DIR)/ramfunc.elf
+IVTRELOC_BIN = $(BUILD_DIR)/ivtreloc.elf
+
 
 PRIMARY_GOAL := $(firstword $(MAKECMDGOALS))
 
@@ -43,6 +48,12 @@ $(EXTI_BIN): $(BUILD_DIR)
 $(TIMER_BIN): $(BUILD_DIR)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDES) $(TIMER_SRC) -o $@
 
+$(RAMFUNC_BIN): $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDES) $(RAMFUNC_SRC) -o $@
+
+$(IVTRELOC_BIN): $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDES) $(IVTRELOC_SRC) -o $@
+
 .PHONY: main
 main: $(MAIN_BIN)
 
@@ -52,6 +63,12 @@ exti: $(EXTI_BIN)
 .PHONY: timer
 timer: $(TIMER_BIN)
 
+.PHONY: ramfunc
+ramfunc:$(RAMFUNC_BIN)
+
+.PHONY: ivtreloc
+ivtreloc:$(IVTRELOC_BIN)
+	
 .PHONY: debug
 debug:
 ifeq ($(CURRBIN),)

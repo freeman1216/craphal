@@ -9,6 +9,16 @@ extern unsigned int __edata;
 extern unsigned int __bss;
 extern unsigned int __ebss;
 
+extern unsigned int __rramfunc;
+extern unsigned int __ramfunc;
+extern unsigned int __eramfunc;
+
+extern unsigned int __rramfunc;
+extern unsigned int __ramfunc;
+extern unsigned int __eramfunc;
+
+extern unsigned int __ram_ivt;
+extern unsigned int __eram_ivt;
 extern int main();
 
 void default_isr(){
@@ -87,16 +97,29 @@ static inline void bss_init(){
     }
 }
 
+static inline void ramfunc_init(){
+    unsigned int *src = &__rramfunc;
+    unsigned int *dest = &__ramfunc;
+    while (dest<&__eramfunc) {
+        *dest++ = *src++;
+    }
+}
+
+static inline void copy_ivt_to_ram();
+
+
 void isr_reset(){
     data_init();
     bss_init();
+    ramfunc_init();
+    copy_ivt_to_ram();
     main();
     while(1);
 };
 #define IVT_SIZE (102U)
 typedef void (*isr_addr_t) (void);
 
-const isr_addr_t ivt_table[IVT_SIZE] __attribute((used,section(".ivt")))={ 
+const isr_addr_t ivt_table[IVT_SIZE] __attribute__((used,section(".ivt")))={ 
     (isr_addr_t)&__estack,
     isr_reset,
     0, //NMI
@@ -201,3 +224,10 @@ const isr_addr_t ivt_table[IVT_SIZE] __attribute((used,section(".ivt")))={
     spi5_isr
 
 };
+static inline void copy_ivt_to_ram(){
+    unsigned int *dest = &__ram_ivt;
+    unsigned int *src = (unsigned int*)ivt_table; 
+    while (dest<&__eram_ivt) {
+        *dest++ = *src++; 
+    }
+}

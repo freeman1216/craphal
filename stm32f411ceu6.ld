@@ -18,6 +18,15 @@ SECTIONS
 
     __rdata = LOADADDR(.data); /* data placed in rom */
 
+    
+    .rivt : ALIGN(4)
+    {
+        __ram_ivt = .;
+        . = . +( __ivt_rom_end - __ivt_rom_start); 
+        . = ALIGN(4);
+        __eram_ivt = .;
+    } > RAM
+
     .data : ALIGN(4)
     {   
         __data = .;
