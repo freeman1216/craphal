@@ -12,9 +12,9 @@ extern unsigned int __ebss;
 extern int main();
 
 void default_isr(){
-    
+    while(1);
 }
-
+WEAK_ISR(isr_hardfault);
 WEAK_ISR(wwdg_isr);
 WEAK_ISR(pvd_isr);
 WEAK_ISR(tamp_stamp_isr);
@@ -92,14 +92,7 @@ void isr_reset(){
     bss_init();
     main();
     while(1);
-}
-
-DEFAULT_USER_ISR(isr_hardfault){
-    while(1);
-}
-
-WEAK_USER_ISR(isr_hardfault);
-
+};
 #define IVT_SIZE (102U)
 typedef void (*isr_addr_t) (void);
 
