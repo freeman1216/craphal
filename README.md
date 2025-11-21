@@ -1,14 +1,11 @@
 # BADHAL – Bare-Metal Drivers for STM32
 
-**Why “BADHAL”?**  
-Because honestly, the standard HAL library drove me nuts. Too much boilerplate, too many places where the state changes, some unexplained delays (DMA busy still haunts me). So I decided to just write my own lightweight drivers that actually make sense.
-
 ## What is this?  
-BAD is a collection of simple, mostly header-only (stb style) drivers for STM32F411CEU6. It includes:  
-
+BAD is a collection of simple, mostly header-only (stb style) drivers for STM32F411CEU6. Born out of frustration with conteporary libraries
+Includes:  
 - GPIO (`driver/io.h`) - easy pin setup, set/reset pins, configure alternate functions.  
 - NVIC (`driver/nvic.h`) - enable/disable interrupts, simple as that.  
-- SPI (`driver/spi.h`) - full SPI setup, DMA support, interrupt-friendly.  
+- SPI (`driver/spi.h`) -  SPI setup, DMA support.  
 - EXTI (`driver/exti.h`) - external interrupts with configurable trigger.  
 - Assert (`assert.h`) - prints messages over UART if things go wrong.  
 - ILI9341 (`ili9341.h`) - basic LCD driver with DMA framebuffer support.  
@@ -17,12 +14,12 @@ BAD is a collection of simple, mostly header-only (stb style) drivers for STM32F
 - SYSCFG (`driver/syscfg.h`) - Syscfg, for now only for exti
 - Flash (`driver/flash.h`) - setup latency, caches, and prefetch.
 - RCC  (`driver/rcc.h`) - clock configuration 
+- Timers (`driver/timer.h`) - basic timer setup
 - Handlers (`handlers.c`) - for now only implements a hardfault that reports the registers state at fault
 - Startup (`startup_stm32f411ceu6.c`) - startup file, plain and simple
 - Simple linker script (`stm32f411ceu6.ld`)
 
 Most of the drivers dont support full range of features yet, they will be implemented as needed.
-All drivers are **lightweight**, **easy to read**, and **easy to modify**, also easily inlinable by the compiler.
 ## How to use it  
 1. Include the header in your project.  
 2. If a driver has a `_IMPLEMENTATION` define, enable it in **one C file**, or use it statically:
@@ -50,8 +47,6 @@ Why is it this way? I just find it nicer when all the setup is in one place.
 
 ## Notes
 
-All the setup functions except io simply overwrite the configuration register.
-Why? 90% of projects just don`t change the peripheral settings or just have at most two modes and the added cruft of managing the state of the settings doesnt make much sense at that point, if you wanna see how bad it gets just look up hal SPI read/write functions.
 If you need multiple settings for your project just do this
 ```c
 #define ILI9341_SPI_FEATURES_CMD                \
@@ -84,8 +79,7 @@ static inline void ili9341_spi_control_transmition_mode(){
     spi_setup(ILI9341_SPI,ILI9341_SPI_FEATURES_CMD,0,0);
     spi_enable(ILI9341_SPI);
 }
-```
-Which is what HAL does anyway just with smothering it all over the read/write functions. Don`t turn a simple ldr imm str r into a hundred branches please. 
+``` 
 
 The main(`main.c`) file implements an example that 
 - Setups main clock at 100mhz
